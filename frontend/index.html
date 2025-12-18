@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TripGenius</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Reset & Fonts */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: #f5f7fa;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .main-header {
+      text-align: center;
+      padding: 60px 20px 40px;
+      background: linear-gradient(135deg, #0077cc, #00b4ff);
+      color: white;
+    }
+
+    .main-header h1 {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    .main-header p {
+      font-size: 18px;
+    }
+
+    /* Main Content */
+    .center-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .center-card {
+      max-width: 600px;
+      background: white;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+
+    .center-card h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .center-card p {
+      font-size: 16px;
+      margin-bottom: 15px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    /* Button */
+    .primary-btn {
+      padding: 15px 40px;
+      background: #0077cc;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .primary-btn:hover {
+      background: #005fa3;
+    }
+
+    /* Footer */
+    .main-footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      color: #777;
+      background: #f1f1f1;
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      .center-card {
+        padding: 30px 20px;
+      }
+
+      .main-header h1 {
+        font-size: 28px;
+      }
+
+      .main-header p {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="main-header">
+    <h1>TripGenius</h1>
+    <p>Intelligent Travel Planning Made Simple</p>
+  </header>
+
+  <main class="center-container">
+    <div class="center-card">
+      <h2>Plan Smarter. Travel Better.</h2>
+      <p>
+        TripGenius is an intelligent travel planning system designed to help users
+        create optimized itineraries based on budget, time constraints, and personal preferences.
+      </p>
+      <p>
+        Focus on smart decision-making and itinerary optimization rather than bookings.
+      </p>
+      <button class="primary-btn" onclick="location.href='login.html'">
+        Get Started
+      </button>
+    </div>
+  </main>
+
+  <footer class="main-footer">
+    © 2025 TripGenius | Academic Project
+  </footer>
+
+</body>
+</html>
