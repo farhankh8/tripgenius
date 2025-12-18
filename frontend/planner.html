@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Trip Planner | TripGenius</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: #f5f7fa;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header, .main-header {
+      text-align: center;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, #0066ff, #00b4ff);
+      color: #fff;
+    }
+    header h1, .main-header h1 {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    header p, .main-header p {
+      font-size: 16px;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 30px;
+      gap: 20px;
+      flex: 1;
+    }
+    .card {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      max-width: 420px;
+      width: 100%;
+    }
+    .card h2 {
+      margin-top: 0;
+      font-size: 24px;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #0077cc;
+      box-shadow: 0 0 5px rgba(0,119,204,0.3);
+    }
+    #preferences-container {
+      margin-top: 10px;
+    }
+    #preferences-container div {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    #preferences-container input {
+      width: auto;
+    }
+    .primary-btn {
+      width: 100%;
+      margin-top: 20px;
+      padding: 12px;
+      font-size: 16px;
+      background-color: #0077cc;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .primary-btn:hover {
+      background-color: #005fa3;
+    }
+    .info-card {
+      background: linear-gradient(rgba(0,119,204,0.85), rgba(0,119,204,0.85)), url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee");
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      text-align: left;
+    }
+    .travel-points {
+      margin-top: 20px;
+      font-size: 15px;
+    }
+    .travel-points div {
+      margin-bottom: 10px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    footer, .main-footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      color: #666;
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+  <header class="main-header">
+    <h1>TripGenius Travel Planner</h1>
+    <p>AI-powered itinerary planning for individuals and small travel groups</p>
+  </header>
+  <div class="container">
+    <div class="card">
+      <h2>Plan Your Trip</h2>
+      <label>Destination</label>
+      <input list="destinations" id="destination" placeholder="Enter city or country">
+      <datalist id="destinations">
+        <!-- Indian Cities -->
+        <option value="Mumbai">
+        <option value="Delhi">
+        <option value="Bangalore">
+        <option value="Hyderabad">
+        <option value="Ahmedabad">
+        <option value="Chennai">
+        <option value="Kolkata">
+        <option value="Surat">
+        <option value="Pune">
+        <option value="Jaipur">
+        <option value="Lucknow">
+        <option value="Kanpur">
+        <option value="Nagpur">
+        <option value="Indore">
+        <option value="Thane">
+        <option value="Bhopal">
+        <option value="Visakhapatnam">
+        <option value="Pimpri-Chinchwad">
+        <option value="Patna">
+        <option value="Vadodara">
+        <option value="Ghaziabad">
+        <option value="Ludhiana">
+        <option value="Agra">
+        <option value="Nashik">
+        <option value="Faridabad">
+        <option value="Meerut">
+        <option value="Rajkot">
+        <option value="Kalyan-Dombivli">
+        <option value="Vasai-Virar">
+        <option value="Varanasi">
+        <option value="Srinagar">
+        <option value="Aurangabad">
+        <option value="Amritsar">
+        <option value="Allahabad">
+        <option value="Ranchi">
+        <option value="Coimbatore">
+        <option value="Jabalpur">
+        <option value="Gwalior">
+        <option value="Vijayawada">
+        <option value="Jodhpur">
+        <option value="Madurai">
+        <option value="Raipur">
+        <option value="Kota">
+        <option value="Guwahati">
+        <option value="Chandigarh">
+        <option value="Solapur">
+        <option value="Hubballi-Dharwad">
+        <option value="Bareilly">
+        <option value="Moradabad">
+        <option value="Mysuru">
+        <option value="Tiruchirappalli">
+        <option value="Gurgaon">
+        <option value="Aligarh">
+        <option value="Jalandhar">
+        <option value="Bhubaneswar">
+        <option value="Salem">
+        <option value="Warangal">
+        <option value="Guntur">
+        <option value="Bhiwandi">
+        <option value="Saharanpur">
+        <option value="Gorakhpur">
+        <option value="Bikaner">
+        <option value="Amravati">
+        <option value="Noida">
+        <option value="Jamshedpur">
+        <option value="Bhilai">
+        <option value="Cuttack">
+        <option value="Firozabad">
+        <option value="Kochi">
+        <option value="Bhavnagar">
+        <option value="Dehradun">
+        <option value="Durg-Bhilainagar">
+        <option value="Asansol">
+        <option value="Nanded">
+        <option value="Ajmer">
+        <option value="Ujjain">
+        <option value="Sangli">
+        <option value="Mangalore">
+        <option value="Erode">
+        <option value="Belagavi">
+        <option value="Ambattur">
+        <option value="Tirunelveli">
+        <option value="Malegaon">
+        <option value="Gaya">
+        <option value="Tiruppur">
+        <option value="Davanagere">
+        <option value="Kozhikode">
+        <option value="Akola">
+        <option value="Kurnool">
+        <option value="Bokaro">
+        <option value="Rajahmundry">
+        <option value="Bilaspur">
+        <option value="Shahjahanpur">
+        <option value="Rewa">
+        <option value="Raichur">
+        <option value="Kolhapur">
+        <option value="Ichalkaranji">
+        <option value="Tiruvottiyur">
+        <option value="Tirupati">
+        <option value="Alwar">
+        <option value="Bardhaman">
+        <option value="Kamarhati">
+        <option value="Gandhinagar">
+        <option value="Shivamogga">
+        <option value="Tiruchirappalli">
+        <option value="Kulti">
+        <option value="Nizamabad">
+        <option value="Parbhani">
+        <option value="Panipat">
+        <option value="Dhule">
+        <option value="Rohtak">
+        <option value="Bhagalpur">
+        <option value="Siliguri">
+        <option value="Mirzapur">
+        <option value="Guntakal">
+        <option value="Ratlam">
+        <option value="Hapur">
+        <option value="Arrah">
+        <option value="Anantapur">
+        <option value="Dewas">
+        <option value="Kharagpur">
+        <option value="Ichalkaranji">
+        <option value="Ongole">
+        <option value="Nandyal">
+        <option value="Munger">
+        <option value="Purulia">
+        <option value="Amroha">
+        <option value="Sikar">
+        <option value="Karnal">
+        <option value="Etawah">
+        <option value="Rampur">
+        <option value="Haldwani-Cum-Kathgodam">
+        <option value="Purnia">
+        <option value="Raiganj">
+        <option value="Bidhannagar">
+        <option value="Pali">
+        <option value="Haridwar">
+        <option value="Vellore">
+        <option value="Bhusawal">
+        <option value="Orai">
+        <option value="Bahraich">
+        <option value="Muzaffarpur">
+        <option value="Unnao">
+        <option value="Hospet">
+        <option value="Bijapur">
+        <option value="Modinagar">
+        <option value="Hazaribagh">
+        <option value="Panchkula">
+        <option value="Budaun">
+        <option value="Ranipet">
+        <option value="Shimoga">
+        <option value="Kumbakonam">
+        <option value="Amravati">
+        <option value="Nizamabad">
+        <option value="Mangaluru">
+        <option value="Kolar">
+        <option value="Bhavnagar">
+        <option value="Nanded">
+        <option value="Jalgaon">
+        <option value="Bilaspur">
+        <option value="Khammam">
+        <option value="Nizamabad">
+        <option value="Khammam">
+        <!-- International Countries -->
+        <option value="France">
+        <option value="Spain">
+        <option value="United States">
+        <option value="China">
+        <option value="Italy">
+        <option value="Turkey">
+        <option value="Mexico">
+        <option value="Thailand">
+        <option value="Germany">
+        <option value="Australia">
+        <option value="Japan">
+        <option value="Canada">
+        <option value="Brazil">
+        <option value="Russia">
+        <option value="South Korea">
+        <option value="United Kingdom">
+        <option value="Switzerland">
+        <option value="Netherlands">
+        <option value="Sweden">
+        <option value="Austria">
+        <option value="Belgium">
+        <option value="Portugal">
+        <option value="Ireland">
+        <option value="Norway">
+        <option value="Denmark">
+        <option value="Finland">
+        <option value="Greece">
+        <option value="New Zealand">
+        <option value="Singapore">
+        <option value="Malaysia">
+        <option value="Vietnam">
+        <option value="Indonesia">
+        <option value="Philippines">
+        <option value="South Africa">
+        <option value="Argentina">
+        <option value="Chile">
+        <option value="Peru">
+        <option value="Egypt">
+        <option value="Morocco">
+        <option value="Tunisia">
+        <option value="Israel">
+        <option value="United Arab Emirates">
+        <option value="Saudi Arabia">
+        <option value="Qatar">
+        <option value="Oman">
+        <option value="Jordan">
+        <option value="Lebanon">
+        <option value="Cyprus">
+        <option value="Iceland">
+        <option value="Czech Republic">
+        <option value="Poland">
+        <option value="Hungary">
+        <option value="Romania">
+        <option value="Croatia">
+        <option value="Serbia">
+        <option value="Slovenia">
+        <option value="Montenegro">
+        <option value="Bulgaria">
+        <option value="Albania">
+        <option value="Georgia">
+        <option value="Armenia">
+        <option value="Azerbaijan">
+        <option value="Ukraine">
+        <option value="Belarus">
+        <option value="Kazakhstan">
+        <option value="Uzbekistan">
+        <option value="Kyrgyzstan">
+        <option value="Tajikistan">
+        <option value="Turkmenistan">
+        <option value="Mongolia">
+        <option value="Nepal">
+        <option value="Bhutan">
+        <option value="Sri Lanka">
+        <option value="Maldives">
+        <option value="Bangladesh">
+        <option value="Myanmar">
+        <option value="Cambodia">
+        <option value="Laos">
+        <option value="Brunei">
+        <option value="Papua New Guinea">
+        <option value="Fiji">
+        <option value="Tonga">
+        <option value="Samoa">
+        <option value="Vanuatu">
+        <option value="Solomon Islands">
+        <option value="Marshall Islands">
+        <option value="Palau">
+        <option value="Micronesia">
+        <option value="Kiribati">
+        <option value="Nauru">
+        <option value="Tuvalu">
+        <option value="Cook Islands">
+        <option value="French Polynesia">
+        <option value="New Caledonia">
+        <option value="Wallis and Futuna">
+        <option value="Niue">
+        <option value="Tokelau">
+        <option value="American Samoa">
+        <option value="Guam">
+        <option value="Northern Mariana Islands">
+        <option value="Puerto Rico">
+        <option value="US Virgin Islands">
+        <option value="British Virgin Islands">
+        <option value="Cayman Islands">
+        <option value="Bahamas">
+        <option value="Jamaica">
+        <option value="Trinidad and Tobago">
+        <option value="Barbados">
+        <option value="Grenada">
+        <option value="Saint Lucia">
+        <option value="Saint Vincent and the Grenadines">
+        <option value="Antigua and Barbuda">
+        <option value="Dominica">
+        <option value="Saint Kitts and Nevis">
+        <option value="Dominican Republic">
+        <option value="Haiti">
+        <option value="Cuba">
+        <option value="Panama">
+        <option value="Costa Rica">
+        <option value="Nicaragua">
+        <option value="Honduras">
+        <option value="El Salvador">
+        <option value="Guatemala">
+        <option value="Belize">
+      </datalist>
+      <label>Number of Travelers</label>
+      <select id="members">
+        <option value="1">1 Traveler</option>
+        <option value="2">2 Travelers</option>
+        <option value="3">3 Travelers</option>
+        <option value="4">4 Travelers</option>
+        <option value="5">5 Travelers</option>
+      </select>
+      <label>Budget (₹)</label>
+      <select id="budget">
+        <option value="">Select Budget</option>
+        <option value="10000">₹10,000</option>
+        <option value="25000">₹25,000</option>
+        <option value="50000">₹50,000</option>
+        <option value="100000">₹1,00,000</option>
+        <option value="150000">₹1,50,000</option>
+      </select>
+      <label>Suggested Trip Duration</label>
+      <select id="days">
+        <option value="">Select Budget</option>
+      </select>
+      <label>Travel Preferences</label>
+      <small>Select exactly 5 preferences</small>
+      <div id="preferences-container"></div>
+      <button class="primary-btn" onclick="generatePlan()">Generate Itinerary</button>
+    </div>
+    <div class="card info-card">
+      <h3>Travel Smarter with TripGenius</h3>
+      <p>Designed to support trips across India and 50 countries worldwide.</p>
+      <div class="travel-points">
+        <div>✈️ Smart destination planning for India and 50 countries</div>
+        <div>🗺️ Optimized day-wise itineraries with AI suggestions</div>
+        <div>🏨 Budget-friendly stay and activity recommendations</div>
+        <div>📍 Popular attractions, hidden gems, and local spots</div>
+        <div>⏱️ Time-efficient travel schedules and smart route planning</div>
+      </div>
+    </div>
+  </div>
+  <footer class="main-footer">© 2025 TripGenius | Academic Project</footer>
+  <script>
+    const preferences = [
+      "Beaches & Islands","Mountains & Nature","City Exploration",
+      "Culture & Heritage","Adventure Activities","Food & Nightlife",
+      "Wildlife & Safaris","Spiritual & Wellness",
+      "Road Trips & Drives","Luxury & Premium Stays"
+    ];
+    function updatePlanner() {
+      const container = document.getElementById("preferences-container");
+      container.innerHTML = "";
+      preferences.forEach(pref => {
+        const div = document.createElement("div");
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.value = pref;
+        cb.onchange = limitCheckboxes;
+        const lbl = document.createElement("label");
+        lbl.textContent = pref;
+        div.appendChild(cb);
+        div.appendChild(lbl);
+        container.appendChild(div);
+      });
+    }
+    function limitCheckboxes() {
+      const checked = document.querySelectorAll("#preferences-container input:checked");
+      if (checked.length > 5) {
+        this.checked = false;
+        alert("You can select exactly 5 travel preferences.");
+      }
+    }
+    document.getElementById("budget").addEventListener("change", function () {
+      const b = parseInt(this.value);
+      const d = document.getElementById("days");
+      d.innerHTML = "";
+      let opts = [];
+      if (b >= 10000) opts = ["1–2 Days","3–4 Days"];
+      if (b >= 25000) opts = ["3–4 Days","5–6 Days"];
+      if (b >= 50000) opts = ["5–6 Days","7–9 Days"];
+      opts.forEach(x => {
+        const o = document.createElement("option");
+        o.value = x;
+        o.textContent = x;
+        d.appendChild(o);
+      });
+    });
+    function generatePlan() {
+      const destination = document.getElementById("destination").value;
+      const members = document.getElementById("members").value;
+      const budget = document.getElementById("budget").value;
+      const days = document.getElementById("days").value;
+      const prefs = Array.from(
+        document.querySelectorAll("#preferences-container input:checked")
+      ).map(p => p.value);
+      if (!destination || !budget || !days || prefs.length !== 5) {
+        alert("Please fill all fields and select exactly 5 preferences.");
+        return;
+      }
+      localStorage.setItem("tripData", JSON.stringify({ destination, members, budget, days, preferences: prefs }));
+      window.location.href = "itinerary.html";
+    }
+    window.onload = updatePlanner;
+  </script>
+</body>
+</html>
