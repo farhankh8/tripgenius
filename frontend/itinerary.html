@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Itinerary | TripGenius</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+    body { background: #f5f7fa; min-height: 100vh; display: flex; flex-direction: column; }
+    header, .main-header { text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #0066ff, #00b4ff); color: #fff; }
+    header h1, .main-header h1 { font-size: 32px; margin-bottom: 8px; }
+    header p, .main-header p { font-size: 16px; }
+    .container { max-width: 1200px; width: 90%; margin: 30px auto; display: flex; flex-direction: column; gap: 25px; flex: 1; }
+    .card { background: #fff; padding: 35px 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    .card h2, .card h3 { margin-top: 0; color: #0077cc; }
+    .card p { color: #555; line-height: 1.6; margin-bottom: 15px; }
+    .itinerary-summary { display: flex; flex-wrap: wrap; gap: 15px; }
+    .summary-item { flex: 1 1 200px; background: #f8f9fb; padding: 15px 20px; border-radius: 10px; text-align: center; }
+    .summary-item h4 { margin-bottom: 5px; color: #0077cc; }
+    .summary-item p { font-size: 16px; color: #333; }
+    .day-card { background: #f8f9fb; margin-bottom: 15px; padding: 20px; border-radius: 10px; border-left: 5px solid #0077cc; }
+    .day-card h4 { margin-bottom: 10px; font-size: 20px; }
+    .day-card ul { list-style-type: disc; margin-left: 20px; color: #555; }
+    .primary-btn { padding: 14px 25px; background: linear-gradient(90deg, #0077cc, #00b4ff); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-top: 15px; display: inline-block; }
+    .primary-btn:hover { background: linear-gradient(90deg, #005fa3, #009ddb); transform: translateY(-2px); }
+    .main-footer { text-align: center; padding: 15px; font-size: 14px; color: #666; background: #f1f1f1; margin-top: auto; }
+    @media(max-width: 768px) { .itinerary-summary { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <header class="main-header">
+    <h1>Your Trip Itinerary</h1>
+    <p>Prepared by TripGenius for your selected preferences</p>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h2>Trip Summary</h2>
+      <div class="itinerary-summary">
+        <div class="summary-item"><h4>Destination</h4><p id="sum-destination"></p></div>
+        <div class="summary-item"><h4>Budget</h4><p id="sum-budget"></p></div>
+        <div class="summary-item"><h4>Members</h4><p id="sum-members"></p></div>
+        <div class="summary-item"><h4>Duration</h4><p id="sum-days"></p></div>
+        <div class="summary-item"><h4>Preference</h4><p id="sum-preference"></p></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Day-by-Day Itinerary</h2>
+      <div id="itinerary"></div>
+    </div>
+
+    <div style="text-align: center;">
+      <button class="primary-btn" onclick="window.print()">Print Itinerary</button>
+      <button class="primary-btn" style="margin-left:10px;" onclick="shareItinerary()">Share Itinerary</button>
+      <button class="primary-btn" style="margin-left:10px;" onclick="window.location.href='booking-summary.html'">Go to Booking Summary</button>
+    </div>
+  </div>
+
+  <footer class="main-footer">© 2025 TripGenius | Academic Project</footer>
+
+  <script>
+    const tripData = JSON.parse(localStorage.getItem("tripData"));
+    if (!tripData) {
+      alert("No trip data found. Redirecting to planner.");
+      window.location.href = "planner.html";
+    }
+
+    document.getElementById("sum-destination").textContent = tripData.destination;
+    document.getElementById("sum-budget").textContent = `₹${tripData.budget} x ${tripData.members} members = ₹${tripData.budget * tripData.members}`;
+    document.getElementById("sum-members").textContent = tripData.members;
+    document.getElementById("sum-days").textContent = tripData.days;
+    document.getElementById("sum-preference").textContent = tripData.preferences.join(", ");
+
+    const itineraryDiv = document.getElementById("itinerary");
+    const days = Math.min(15, parseInt(tripData.days.split("–")[1] || tripData.days.split("–")[0]));
+
+    // Itineraries for 10 Indian cities
+    const indianItineraries = {
+      "Delhi": [
+        "Day 1: Arrival, India Gate, dinner at local restaurant",
+        "Day 2: Humayun's Tomb, Qutub Minar, street food",
+        "Day 3: Akshardham Temple, shopping at Chandni Chowk",
+        "Day 4: National Museum, Lodhi Gardens",
+        "Day 5: Red Fort, Old Delhi rickshaw ride",
+        "Day 6: Day trip to Noida or Gurugram",
+        "Day 7: Lotus Temple, Nizamuddin Dargah",
+        "Day 8: Lodi Gardens, local NGO walk",
+        "Day 9: Raj Ghat, Connaught Place",
+        "Day 10: Jama Masjid, Chandni Chowk",
+        "Day 11: Day trip to Agra, Taj Mahal",
+        "Day 12: Day trip to Jaipur, Amber Fort",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Mumbai": [
+        "Day 1: Arrival, Gateway of India, dinner at seafood restaurant",
+        "Day 2: Elephanta Caves, Colaba Causeway shopping",
+        "Day 3: Film City tour, Juhu Beach food",
+        "Day 4: Sanjay Gandhi National Park, Dharavi tour",
+        "Day 5: Chhatrapati Shivaji Terminus, Victoria Gardens",
+        "Day 6: Day trip to Lonavala, adventure activities",
+        "Day 7: Kala Ghoda art district, Jehangir Art Gallery",
+        "Day 8: Heritage walk, Khotachiwadi",
+        "Day 9: Sewri Fort, Mahakali Caves",
+        "Day 10: Local brewery, craft beer tasting",
+        "Day 11: Chhatrapati Shivaji Maharaj Terminus, heritage walk",
+        "Day 12: National Gallery of Modern Art",
+        "Day 13: Street art tour, Bandra",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Bangalore": [
+        "Day 1: Arrival, Lalbagh Botanical Garden, dinner at local restaurant",
+        "Day 2: Cubbon Park, Vidhana Soudha, shopping at Commercial Street",
+        "Day 3: ISKCON Temple, Bannerghatta National Park",
+        "Day 4: Innovative Film City, VV Puram Food Street",
+        "Day 5: Cubbon Park evening walk, local art gallery",
+        "Day 6: Day trip to Mysore, Mysore Palace",
+        "Day 7: Cubbon Park, local cuisine tasting",
+        "Day 8: ISKCON Temple, Bannerghatta National Park",
+        "Day 9: Innovative Film City, VV Puram Food Street",
+        "Day 10: Cubbon Park evening walk, local art gallery",
+        "Day 11: Day trip to Mysore, Mysore Palace",
+        "Day 12: Cubbon Park, local cuisine tasting",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Hyderabad": [
+        "Day 1: Arrival, Charminar, dinner at local restaurant",
+        "Day 2: Golconda Fort, shopping at Laad Bazaar",
+        "Day 3: Salar Jung Museum, Hussain Sagar Lake",
+        "Day 4: Ramoji Film City, evening at Necklace Road",
+        "Day 5: Day trip to Nagarjuna Sagar Dam",
+        "Day 6: Mecca Masjid, Chowmahalla Palace",
+        "Day 7: Birla Mandir, Necklace Road",
+        "Day 8: Day trip to Warangal, Warangal Fort",
+        "Day 9: Falaknuma Palace, shopping at Banjara Hills",
+        "Day 10: Birla Mandir, Necklace Road",
+        "Day 11: Day trip to Nagarjuna Sagar Dam",
+        "Day 12: Mecca Masjid, Chowmahalla Palace",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Chennai": [
+        "Day 1: Arrival, Marina Beach, dinner at local restaurant",
+        "Day 2: Kapaleeshwarar Temple, shopping at T Nagar",
+        "Day 3: Government Museum, Fort St. George",
+        "Day 4: Mahabalipuram day trip, Shore Temple",
+        "Day 5: Valluvar Kottam, Mylapore",
+        "Day 6: Day trip to Mahabalipuram, Shore Temple",
+        "Day 7: Valluvar Kottam, Mylapore",
+        "Day 8: Government Museum, Fort St. George",
+        "Day 9: Kapaleeshwarar Temple, shopping at T Nagar",
+        "Day 10: Marina Beach, local cuisine tasting",
+        "Day 11: Day trip to Mahabalipuram, Shore Temple",
+        "Day 12: Valluvar Kottam, Mylapore",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Kolkata": [
+        "Day 1: Arrival, Victoria Memorial, dinner at local restaurant",
+        "Day 2: Howrah Bridge, shopping at New Market",
+        "Day 3: Indian Museum, St. Paul's Cathedral",
+        "Day 4: Day trip to Sunderbans",
+        "Day 5: Dakshineswar Kali Temple, Kalighat Temple",
+        "Day 6: Alipore Zoo, Science City",
+        "Day 7: Day trip to Sunderbans",
+        "Day 8: Dakshineswar Kali Temple, Kalighat Temple",
+        "Day 9: Alipore Zoo, Science City",
+        "Day 10: Victoria Memorial, Howrah Bridge",
+        "Day 11: Day trip to Sunderbans",
+        "Day 12: Dakshineswar Kali Temple, Kalighat Temple",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Pune": [
+        "Day 1: Arrival, Shaniwar Wada, dinner at local restaurant",
+        "Day 2: Aga Khan Palace, shopping at FC Road",
+        "Day 3: Sinhagad Fort, Pataleshwar Cave",
+        "Day 4: Day trip to Lonavala, adventure activities",
+        "Day 5: Raja Dinkar Kelkar Museum, Osho Ashram",
+        "Day 6: Day trip to Lonavala, adventure activities",
+        "Day 7: Raja Dinkar Kelkar Museum, Osho Ashram",
+        "Day 8: Shaniwar Wada, Aga Khan Palace",
+        "Day 9: Sinhagad Fort, Pataleshwar Cave",
+        "Day 10: Day trip to Lonavala, adventure activities",
+        "Day 11: Raja Dinkar Kelkar Museum, Osho Ashram",
+        "Day 12: Shaniwar Wada, Aga Khan Palace",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Jaipur": [
+        "Day 1: Arrival, Hawa Mahal, dinner at local restaurant",
+        "Day 2: Amber Fort, shopping at Johari Bazaar",
+        "Day 3: City Palace, Jantar Mantar",
+        "Day 4: Day trip to Pushkar, Pushkar Lake",
+        "Day 5: Nahargarh Fort, Albert Hall Museum",
+        "Day 6: Day trip to Pushkar, Pushkar Lake",
+        "Day 7: Nahargarh Fort, Albert Hall Museum",
+        "Day 8: Hawa Mahal, Amber Fort",
+        "Day 9: City Palace, Jantar Mantar",
+        "Day 10: Day trip to Pushkar, Pushkar Lake",
+        "Day 11: Nahargarh Fort, Albert Hall Museum",
+        "Day 12: Hawa Mahal, Amber Fort",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Lucknow": [
+        "Day 1: Arrival, Bara Imambara, dinner at local restaurant",
+        "Day 2: Chota Imambara, shopping at Hazratganj",
+        "Day 3: Rumi Darwaza, Ambedkar Memorial",
+        "Day 4: Day trip to Aishbagh, Ambedkar Memorial",
+        "Day 5: Rumi Darwaza, Ambedkar Memorial",
+        "Day 6: Day trip to Aishbagh, Ambedkar Memorial",
+        "Day 7: Rumi Darwaza, Ambedkar Memorial",
+        "Day 8: Bara Imambara, Chota Imambara",
+        "Day 9: Hazratganj, shopping at Hazratganj",
+        "Day 10: Rumi Darwaza, Ambedkar Memorial",
+        "Day 11: Day trip to Aishbagh, Ambedkar Memorial",
+        "Day 12: Rumi Darwaza, Ambedkar Memorial",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Ahmedabad": [
+        "Day 1: Arrival, Sabarmati Ashram, dinner at local restaurant",
+        "Day 2: Adalaj Stepwell, shopping at Law Garden",
+        "Day 3: Sidi Saiyyed Mosque, Kankaria Lake",
+        "Day 4: Day trip to Modhera Sun Temple",
+        "Day 5: Sidi Saiyyed Mosque, Kankaria Lake",
+        "Day 6: Day trip to Modhera Sun Temple",
+        "Day 7: Sidi Saiyyed Mosque, Kankaria Lake",
+        "Day 8: Sabarmati Ashram, Adalaj Stepwell",
+        "Day 9: Law Garden, shopping at Law Garden",
+        "Day 10: Sidi Saiyyed Mosque, Kankaria Lake",
+        "Day 11: Day trip to Modhera Sun Temple",
+        "Day 12: Sidi Saiyyed Mosque, Kankaria Lake",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ]
+    };
+
+    // Itineraries for 20 international countries
+    const internationalItineraries = {
+      "France": [
+        "Day 1: Arrival, Eiffel Tower, dinner at local bistro",
+        "Day 2: Louvre Museum, Notre-Dame Cathedral",
+        "Day 3: Versailles Palace, shopping at Champs-Élysées",
+        "Day 4: Musée d'Orsay, Luxembourg Gardens",
+        "Day 5: Day trip to Disneyland Paris",
+        "Day 6: Arc de Triomphe, Trocadero",
+        "Day 7: Orsay Museum, Latin Quarter",
+        "Day 8: Montmartre, Sacré-Cœur",
+        "Day 9: Day trip to Versailles",
+        "Day 10: Opéra Garnier, Galeries Lafayette",
+        "Day 11: Cluny Museum, Sainte-Chapelle",
+        "Day 12: Free day, spa, shopping",
+        "Day 13: Farewell dinner, cultural show",
+        "Day 14: Seine River cruise",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Spain": [
+        "Day 1: Arrival, Sagrada Família, dinner at local restaurant",
+        "Day 2: Park Güell, shopping at La Rambla",
+        "Day 3: Casa Batlló, Casa Milà",
+        "Day 4: Day trip to Montserrat",
+        "Day 5: Casa Batlló, Casa Milà",
+        "Day 6: Day trip to Montserrat",
+        "Day 7: Casa Batlló, Casa Milà",
+        "Day 8: Sagrada Família, Park Güell",
+        "Day 9: Shopping at La Rambla, local cuisine",
+        "Day 10: Casa Batlló, Casa Milà",
+        "Day 11: Day trip to Montserrat",
+        "Day 12: Casa Batlló, Casa Milà",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "United States": [
+        "Day 1: Arrival, Times Square, dinner at local restaurant",
+        "Day 2: Empire State Building, shopping at Fifth Avenue",
+        "Day 3: Central Park, Metropolitan Museum",
+        "Day 4: Day trip to Niagara Falls",
+        "Day 5: Central Park, Metropolitan Museum",
+        "Day 6: Day trip to Niagara Falls",
+        "Day 7: Central Park, Metropolitan Museum",
+        "Day 8: Times Square, Empire State Building",
+        "Day 9: Shopping at Fifth Avenue, local cuisine",
+        "Day 10: Central Park, Metropolitan Museum",
+        "Day 11: Day trip to Niagara Falls",
+        "Day 12: Central Park, Metropolitan Museum",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "China": [
+        "Day 1: Arrival, Forbidden City, dinner at local restaurant",
+        "Day 2: Great Wall of China, shopping at Wangfujing",
+        "Day 3: Temple of Heaven, Summer Palace",
+        "Day 4: Day trip to Mutianyu Great Wall",
+        "Day 5: Temple of Heaven, Summer Palace",
+        "Day 6: Day trip to Mutianyu Great Wall",
+        "Day 7: Temple of Heaven, Summer Palace",
+        "Day 8: Forbidden City, Great Wall of China",
+        "Day 9: Shopping at Wangfujing, local cuisine",
+        "Day 10: Temple of Heaven, Summer Palace",
+        "Day 11: Day trip to Mutianyu Great Wall",
+        "Day 12: Temple of Heaven, Summer Palace",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Italy": [
+        "Day 1: Arrival, Colosseum, dinner at local restaurant",
+        "Day 2: Vatican Museums, shopping at Via Condotti",
+        "Day 3: Trevi Fountain, Pantheon",
+        "Day 4: Day trip to Pompeii",
+        "Day 5: Trevi Fountain, Pantheon",
+        "Day 6: Day trip to Pompeii",
+        "Day 7: Trevi Fountain, Pantheon",
+        "Day 8: Colosseum, Vatican Museums",
+        "Day 9: Shopping at Via Condotti, local cuisine",
+        "Day 10: Trevi Fountain, Pantheon",
+        "Day 11: Day trip to Pompeii",
+        "Day 12: Trevi Fountain, Pantheon",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Turkey": [
+        "Day 1: Arrival, Hagia Sophia, dinner at local restaurant",
+        "Day 2: Blue Mosque, shopping at Grand Bazaar",
+        "Day 3: Topkapi Palace, Basilica Cistern",
+        "Day 4: Day trip to Cappadocia",
+        "Day 5: Topkapi Palace, Basilica Cistern",
+        "Day 6: Day trip to Cappadocia",
+        "Day 7: Topkapi Palace, Basilica Cistern",
+        "Day 8: Hagia Sophia, Blue Mosque",
+        "Day 9: Shopping at Grand Bazaar, local cuisine",
+        "Day 10: Topkapi Palace, Basilica Cistern",
+        "Day 11: Day trip to Cappadocia",
+        "Day 12: Topkapi Palace, Basilica Cistern",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Mexico": [
+        "Day 1: Arrival, Zócalo, dinner at local restaurant",
+        "Day 2: Teotihuacan, shopping at Mercado de Artesanías",
+        "Day 3: Chapultepec Castle, Anthropology Museum",
+        "Day 4: Day trip to Xochimilco",
+        "Day 5: Chapultepec Castle, Anthropology Museum",
+        "Day 6: Day trip to Xochimilco",
+        "Day 7: Chapultepec Castle, Anthropology Museum",
+        "Day 8: Zócalo, Teotihuacan",
+        "Day 9: Shopping at Mercado de Artesanías, local cuisine",
+        "Day 10: Chapultepec Castle, Anthropology Museum",
+        "Day 11: Day trip to Xochimilco",
+        "Day 12: Chapultepec Castle, Anthropology Museum",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Thailand": [
+        "Day 1: Arrival, Grand Palace, dinner at local restaurant",
+        "Day 2: Wat Phra Kaew, shopping at Chatuchak Market",
+        "Day 3: Wat Arun, Wat Pho",
+        "Day 4: Day trip to Ayutthaya",
+        "Day 5: Wat Arun, Wat Pho",
+        "Day 6: Day trip to Ayutthaya",
+        "Day 7: Wat Arun, Wat Pho",
+        "Day 8: Grand Palace, Wat Phra Kaew",
+        "Day 9: Shopping at Chatuchak Market, local cuisine",
+        "Day 10: Wat Arun, Wat Pho",
+        "Day 11: Day trip to Ayutthaya",
+        "Day 12: Wat Arun, Wat Pho",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Germany": [
+        "Day 1: Arrival, Brandenburg Gate, dinner at local restaurant",
+        "Day 2: Museum Island, shopping at Kurfürstendamm",
+        "Day 3: Berlin Wall, Checkpoint Charlie",
+        "Day 4: Day trip to Potsdam",
+        "Day 5: Berlin Wall, Checkpoint Charlie",
+        "Day 6: Day trip to Potsdam",
+        "Day 7: Berlin Wall, Checkpoint Charlie",
+        "Day 8: Brandenburg Gate, Museum Island",
+        "Day 9: Shopping at Kurfürstendamm, local cuisine",
+        "Day 10: Berlin Wall, Checkpoint Charlie",
+        "Day 11: Day trip to Potsdam",
+        "Day 12: Berlin Wall, Checkpoint Charlie",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Australia": [
+        "Day 1: Arrival, Sydney Opera House, dinner at local restaurant",
+        "Day 2: Sydney Harbour Bridge, shopping at Pitt Street Mall",
+        "Day 3: Taronga Zoo, Royal Botanic Garden",
+        "Day 4: Day trip to Blue Mountains",
+        "Day 5: Taronga Zoo, Royal Botanic Garden",
+        "Day 6: Day trip to Blue Mountains",
+        "Day 7: Taronga Zoo, Royal Botanic Garden",
+        "Day 8: Sydney Opera House, Sydney Harbour Bridge",
+        "Day 9: Shopping at Pitt Street Mall, local cuisine",
+        "Day 10: Taronga Zoo, Royal Botanic Garden",
+        "Day 11: Day trip to Blue Mountains",
+        "Day 12: Taronga Zoo, Royal Botanic Garden",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Japan": [
+        "Day 1: Arrival, Shibuya Crossing, dinner at local restaurant",
+        "Day 2: Meiji Shrine, Harajuku, shopping in Akihabara",
+        "Day 3: Asakusa Temple, Sumo match (if available)",
+        "Day 4: Tokyo Skytree, Ueno Park",
+        "Day 5: Day trip to Nikko",
+        "Day 6: TeamLab Planets, Shibuya Sky",
+        "Day 7: Ginza, Imperial Palace",
+        "Day 8: Senso-ji, Tokyo Skytree",
+        "Day 9: Ghibli Museum, Edo-Tokyo Open Air Museum",
+        "Day 10: Day trip to Nara",
+        "Day 11: Free day, spa, shopping",
+        "Day 12: Farewell dinner, cultural show",
+        "Day 13: Local cuisine tasting, shopping",
+        "Day 14: Departure, souvenir shopping",
+        "Day 15: Final breakfast, departure"
+      ],
+      "Canada": [
+        "Day 1: Arrival, CN Tower, dinner at local restaurant",
+        "Day 2: Niagara Falls, shopping at Eaton Centre",
+        "Day 3: Royal Ontario Museum, Toronto Zoo",
+        "Day 4: Day trip to Niagara Falls",
+        "Day 5: Royal Ontario Museum, Toronto Zoo",
+        "Day 6: Day trip to Niagara Falls",
+        "Day 7: Royal Ontario Museum, Toronto Zoo",
+        "Day 8: CN Tower, Niagara Falls",
+        "Day 9: Shopping at Eaton Centre, local cuisine",
+        "Day 10: Royal Ontario Museum, Toronto Zoo",
+        "Day 11: Day trip to Niagara Falls",
+        "Day 12: Royal Ontario Museum, Toronto Zoo",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Brazil": [
+        "Day 1: Arrival, Christ the Redeemer, dinner at local restaurant",
+        "Day 2: Sugarloaf Mountain, shopping at Ipanema Beach",
+        "Day 3: Copacabana Beach, Maracanã Stadium",
+        "Day 4: Day trip to Tijuca National Park",
+        "Day 5: Copacabana Beach, Maracanã Stadium",
+        "Day 6: Day trip to Tijuca National Park",
+        "Day 7: Copacabana Beach, Maracanã Stadium",
+        "Day 8: Christ the Redeemer, Sugarloaf Mountain",
+        "Day 9: Shopping at Ipanema Beach, local cuisine",
+        "Day 10: Copacabana Beach, Maracanã Stadium",
+        "Day 11: Day trip to Tijuca National Park",
+        "Day 12: Copacabana Beach, Maracanã Stadium",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Russia": [
+        "Day 1: Arrival, Red Square, dinner at local restaurant",
+        "Day 2: Kremlin, shopping at Arbat Street",
+        "Day 3: St. Basil's Cathedral, Tretyakov Gallery",
+        "Day 4: Day trip to Sergiev Posad",
+        "Day 5: St. Basil's Cathedral, Tretyakov Gallery",
+        "Day 6: Day trip to Sergiev Posad",
+        "Day 7: St. Basil's Cathedral, Tretyakov Gallery",
+        "Day 8: Red Square, Kremlin",
+        "Day 9: Shopping at Arbat Street, local cuisine",
+        "Day 10: St. Basil's Cathedral, Tretyakov Gallery",
+        "Day 11: Day trip to Sergiev Posad",
+        "Day 12: St. Basil's Cathedral, Tretyakov Gallery",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "South Korea": [
+        "Day 1: Arrival, Gyeongbokgung Palace, dinner at local restaurant",
+        "Day 2: N Seoul Tower, shopping at Myeongdong",
+        "Day 3: Bukchon Hanok Village, Dongdaemun Design Plaza",
+        "Day 4: Day trip to Nami Island",
+        "Day 5: Bukchon Hanok Village, Dongdaemun Design Plaza",
+        "Day 6: Day trip to Nami Island",
+        "Day 7: Bukchon Hanok Village, Dongdaemun Design Plaza",
+        "Day 8: Gyeongbokgung Palace, N Seoul Tower",
+        "Day 9: Shopping at Myeongdong, local cuisine",
+        "Day 10: Bukchon Hanok Village, Dongdaemun Design Plaza",
+        "Day 11: Day trip to Nami Island",
+        "Day 12: Bukchon Hanok Village, Dongdaemun Design Plaza",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "United Kingdom": [
+        "Day 1: Arrival, London Eye, dinner at local restaurant",
+        "Day 2: Tower Bridge, shopping at Oxford Street",
+        "Day 3: Buckingham Palace, British Museum",
+        "Day 4: Day trip to Stonehenge",
+        "Day 5: Buckingham Palace, British Museum",
+        "Day 6: Day trip to Stonehenge",
+        "Day 7: Buckingham Palace, British Museum",
+        "Day 8: London Eye, Tower Bridge",
+        "Day 9: Shopping at Oxford Street, local cuisine",
+        "Day 10: Buckingham Palace, British Museum",
+        "Day 11: Day trip to Stonehenge",
+        "Day 12: Buckingham Palace, British Museum",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Switzerland": [
+        "Day 1: Arrival, Matterhorn, dinner at local restaurant",
+        "Day 2: Jungfraujoch, shopping at Zermatt",
+        "Day 3: Lake Lucerne, Mount Titlis",
+        "Day 4: Day trip to Interlaken",
+        "Day 5: Lake Lucerne, Mount Titlis",
+        "Day 6: Day trip to Interlaken",
+        "Day 7: Lake Lucerne, Mount Titlis",
+        "Day 8: Matterhorn, Jungfraujoch",
+        "Day 9: Shopping at Zermatt, local cuisine",
+        "Day 10: Lake Lucerne, Mount Titlis",
+        "Day 11: Day trip to Interlaken",
+        "Day 12: Lake Lucerne, Mount Titlis",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Netherlands": [
+        "Day 1: Arrival, Anne Frank House, dinner at local restaurant",
+        "Day 2: Rijksmuseum, shopping at Leidseplein",
+        "Day 3: Van Gogh Museum, Vondelpark",
+        "Day 4: Day trip to Keukenhof Gardens",
+        "Day 5: Van Gogh Museum, Vondelpark",
+        "Day 6: Day trip to Keukenhof Gardens",
+        "Day 7: Van Gogh Museum, Vondelpark",
+        "Day 8: Anne Frank House, Rijksmuseum",
+        "Day 9: Shopping at Leidseplein, local cuisine",
+        "Day 10: Van Gogh Museum, Vondelpark",
+        "Day 11: Day trip to Keukenhof Gardens",
+        "Day 12: Van Gogh Museum, Vondelpark",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Sweden": [
+        "Day 1: Arrival, Gamla Stan, dinner at local restaurant",
+        "Day 2: Vasa Museum, shopping at Drottninggatan",
+        "Day 3: Skansen Open-Air Museum, Royal Palace",
+        "Day 4: Day trip to Uppsala",
+        "Day 5: Skansen Open-Air Museum, Royal Palace",
+        "Day 6: Day trip to Uppsala",
+        "Day 7: Skansen Open-Air Museum, Royal Palace",
+        "Day 8: Gamla Stan, Vasa Museum",
+        "Day 9: Shopping at Drottninggatan, local cuisine",
+        "Day 10: Skansen Open-Air Museum, Royal Palace",
+        "Day 11: Day trip to Uppsala",
+        "Day 12: Skansen Open-Air Museum, Royal Palace",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ],
+      "Denmark": [
+        "Day 1: Arrival, Tivoli Gardens, dinner at local restaurant",
+        "Day 2: Nyhavn, shopping at Strøget",
+        "Day 3: Amalienborg Palace, Rosenborg Castle",
+        "Day 4: Day trip to Kronborg Castle",
+        "Day 5: Amalienborg Palace, Rosenborg Castle",
+        "Day 6: Day trip to Kronborg Castle",
+        "Day 7: Amalienborg Palace, Rosenborg Castle",
+        "Day 8: Tivoli Gardens, Nyhavn",
+        "Day 9: Shopping at Strøget, local cuisine",
+        "Day 10: Amalienborg Palace, Rosenborg Castle",
+        "Day 11: Day trip to Kronborg Castle",
+        "Day 12: Amalienborg Palace, Rosenborg Castle",
+        "Day 13: Free day, spa, shopping",
+        "Day 14: Farewell dinner, cultural show",
+        "Day 15: Departure, souvenir shopping"
+      ]
+    };
+
+    // Select itinerary based on destination
+    const itinerary = indianItineraries[tripData.destination] || internationalItineraries[tripData.destination] || Array.from({ length: 15 }, (_, i) => `Day ${i+1}: Arrival orientation, main attraction, cultural experience, local cuisine tasting`);
+    itinerary.slice(0, days).forEach(day => {
+      const dayCard = document.createElement("div");
+      dayCard.className = "day-card";
+      const activities = day.split(", ");
+      dayCard.innerHTML = `<h4>${activities[0]}</h4><ul>${activities.slice(1).map(act => `<li>${act}</li>`).join("")}</ul>`;
+      itineraryDiv.appendChild(dayCard);
+    });
+
+    function shareItinerary() {
+      const summary = document.getElementById("sum-destination").textContent;
+      const budget = document.getElementById("sum-budget").textContent;
+      const members = document.getElementById("sum-members").textContent;
+      const days = document.getElementById("sum-days").textContent;
+      const preferences = document.getElementById("sum-preference").textContent;
+      const shareText = `TripGenius Itinerary\nDestination: ${summary}\nBudget: ${budget}\nMembers: ${members}\nDuration: ${days}\nPreferences: ${preferences}\n\nCheck your itinerary at TripGenius!`;
+      if (navigator.share) {
+        navigator.share({
+          title: 'TripGenius Itinerary',
+          text: shareText,
+          url: window.location.href
+        }).catch(err => console.log('Error sharing:', err));
+      } else {
+        alert('Share feature is not supported on your browser. Copy and paste the itinerary details manually.');
+      }
+    }
+  </script>
+</body>
+</html>
