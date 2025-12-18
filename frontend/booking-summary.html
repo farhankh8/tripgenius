@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Booking Summary | TripGenius</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+    body { background: #f5f7fa; min-height: 100vh; display: flex; flex-direction: column; }
+    header, .main-header { text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #0066ff, #00b4ff); color: #fff; }
+    header h1, .main-header h1 { font-size: 32px; margin-bottom: 8px; }
+    header p, .main-header p { font-size: 16px; }
+    .container { max-width: 1200px; width: 90%; margin: 30px auto; display: flex; flex-direction: column; gap: 25px; flex: 1; }
+    .card { background: #fff; padding: 35px 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    .card h2, .card h3 { margin-top: 0; color: #0077cc; }
+    .card p { color: #555; line-height: 1.6; margin-bottom: 15px; }
+    .summary-item { margin-bottom: 15px; }
+    .summary-item strong { color: #0077cc; }
+    .status { color: #28a745; font-weight: 600; margin-bottom: 15px; display: flex; align-items: center; }
+    .status::before { content: "✓"; margin-right: 8px; font-size: 18px; }
+    .actions { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+    .primary-btn { padding: 14px 25px; background: linear-gradient(90deg, #0077cc, #00b4ff); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: inline-block; }
+    .primary-btn:hover { background: linear-gradient(90deg, #005fa3, #009ddb); transform: translateY(-2px); }
+    .main-footer { text-align: center; padding: 15px; font-size: 14px; color: #666; background: #f1f1f1; margin-top: auto; }
+    @media(max-width: 768px) { .actions { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <header class="main-header">
+    <h1>Booking Summary</h1>
+    <p>Review your trip details and proceed to payment</p>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h2>Trip Details</h2>
+      <div class="summary-item"><strong>Destination:</strong> <span id="sum-destination"></span></div>
+      <div class="summary-item"><strong>Budget:</strong> <span id="sum-budget"></span></div>
+      <div class="summary-item"><strong>Members:</strong> <span id="sum-members"></span></div>
+      <div class="summary-item"><strong>Duration:</strong> <span id="sum-days"></span></div>
+      <div class="summary-item"><strong>Preferences:</strong> <span id="sum-preference"></span></div>
+      <div class="status">Booking Ready for Payment</div>
+      <p>Review your details and proceed to payment to confirm your booking.</p>
+    </div>
+
+    <div class="card">
+      <h2>Next Steps</h2>
+      <p>Click the button below to proceed to payment and confirm your booking.</p>
+      <div class="actions">
+        <button class="primary-btn" onclick="goToPayment()">Proceed to Payment</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Need Help?</h2>
+      <p>For any questions or changes, contact our support team at <strong>support@tripgenius.com</strong> or call +91-XXXX-XXXXXX.</p>
+    </div>
+  </div>
+
+  <footer class="main-footer">© 2025 TripGenius | Academic Project</footer>
+
+  <script>
+    const tripData = JSON.parse(localStorage.getItem("tripData"));
+    if (!tripData) {
+      alert("No trip data found. Redirecting to planner.");
+      window.location.href = "planner.html";
+    }
+
+    document.getElementById("sum-destination").textContent = tripData.destination;
+    document.getElementById("sum-budget").textContent = `₹${tripData.budget} x ${tripData.members} members = ₹${tripData.budget * tripData.members}`;
+    document.getElementById("sum-members").textContent = tripData.members;
+    document.getElementById("sum-days").textContent = tripData.days;
+    document.getElementById("sum-preference").textContent = tripData.preferences.join(", ");
+
+    function goToPayment() {
+      window.location.href = "payment.html";
+    }
+  </script>
+</body>
+</html>
