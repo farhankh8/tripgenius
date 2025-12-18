@@ -1,0 +1,212 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+/* ===== GLOBAL RESET ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background: #f5f7fa;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ===== HEADER ===== */
+header, .main-header {
+  text-align: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #0066ff, #00b4ff);
+  color: #fff;
+}
+
+header h1, .main-header h1 {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+header p, .main-header p {
+  font-size: 16px;
+}
+
+/* ===== NAVIGATION ===== */
+.main-header nav {
+  margin-top: 15px;
+}
+
+.main-header nav a {
+  color: #fff;
+  margin: 0 12px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.main-header nav a:hover {
+  text-decoration: underline;
+  color: #f0f0f0;
+}
+
+/* ===== CONTAINER ===== */
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 30px;
+  gap: 20px;
+  flex: 1;
+}
+
+/* ===== CARDS ===== */
+.card, .login-card, .center-card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  max-width: 420px;
+  width: 100%;
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover, .login-card:hover, .center-card:hover {
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card h2, .login-card h2, .center-card h2 {
+  margin-top: 0;
+  font-size: 24px;
+  text-align: center;
+  color: #0077cc;
+}
+
+/* ===== LABELS & INPUTS ===== */
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+input, select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #0077cc;
+  box-shadow: 0 0 5px rgba(0, 119, 204, 0.3);
+}
+
+/* ===== CHECKBOX PREFERENCES ===== */
+#preferences-container {
+  margin-top: 10px;
+}
+
+#preferences-container div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+#preferences-container input {
+  width: auto;
+}
+
+/* ===== BUTTONS ===== */
+.primary-btn, .login-card button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  font-size: 16px;
+  background: linear-gradient(90deg, #0077cc, #00b4ff);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.primary-btn:hover, .login-card button:hover {
+  background: linear-gradient(90deg, #005fa3, #009ddb);
+  transform: translateY(-2px);
+}
+
+/* ===== INFO TEXT ===== */
+.subtitle, .login-info {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin-top: 10px;
+}
+
+/* ===== INFO CARD ===== */
+.info-card {
+  background: linear-gradient(rgba(0, 119, 204, 0.85), rgba(0, 119, 204, 0.85)), url("https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1");
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  text-align: center;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.info-card h3, .info-card p {
+  color: #fff;
+}
+
+/* ===== RESULT ===== */
+#result {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 20px auto;
+  font-size: 15px;
+  line-height: 1.6;
+  transition: box-shadow 0.3s ease;
+}
+
+#result:hover {
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== FOOTER ===== */
+footer, .main-footer {
+  text-align: center;
+  padding: 15px;
+  font-size: 14px;
+  color: #666;
+  background: #f1f1f1;
+  margin-top: auto;
+}
+
+/* ===== RESPONSIVE ===== */
+@media screen and (max-width: 480px) {
+  .card, .login-card, .center-card {
+    padding: 20px;
+  }
+
+  header h1, .main-header h1 {
+    font-size: 26px;
+  }
+
+  .container {
+    padding: 20px;
+  }
+
+  .primary-btn, .login-card button {
+    font-size: 14px;
+  }
+}
