@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login | TripGenius</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* Reset & Fonts */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+    body { background: #f5f7fa; display: flex; flex-direction: column; min-height: 100vh; }
+
+    /* Header */
+    .main-header {
+      text-align: center;
+      padding: 60px 20px 40px;
+      background: linear-gradient(135deg, #0077cc, #00b4ff);
+      color: white;
+    }
+    .main-header h1 { font-size: 36px; margin-bottom: 10px; }
+    .main-header p { font-size: 18px; }
+
+    /* Main Content */
+    .center-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .center-card {
+      width: 380px;
+      background: white;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+
+    .center-card h2 {
+      font-size: 28px;
+      margin-bottom: 15px;
+      color: #0077cc;
+    }
+
+    .center-card p.subtitle {
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: #555;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+    input:focus {
+      border-color: #0077cc;
+      box-shadow: 0 0 5px rgba(0,119,204,0.4);
+      outline: none;
+    }
+
+    button.primary-btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #0077cc, #00b4ff);
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    button.primary-btn:hover {
+      background: linear-gradient(90deg, #005fa3, #009ddb);
+      transform: translateY(-2px);
+    }
+
+    .message {
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    .message.error { color: red; }
+    .message.success { color: green; }
+
+    .guest-link {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #555;
+    }
+    .guest-link a {
+      color: #0077cc;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .guest-link a:hover {
+      text-decoration: underline;
+    }
+
+    /* Footer */
+    .main-footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      color: #777;
+      background: #f1f1f1;
+    }
+
+    /* Responsive */
+    @media(max-width: 420px){
+      .center-card { width: 90%; padding: 30px 20px; }
+      .main-header h1 { font-size: 28px; }
+      .main-header p { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="main-header">
+  <h1>TripGenius</h1>
+  <p>Intelligent Travel Planning Made Simple</p>
+</header>
+
+<main class="center-container">
+  <div class="center-card">
+    <h2>Sign in to TripGenius</h2>
+    <p class="subtitle">Enter your email and password to access your account</p>
+
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Email (you@gmail.com)" required>
+      <input type="password" id="password" placeholder="Password (min 6 characters)" required>
+      <button type="submit" class="primary-btn">Sign In</button>
+      <p id="message" class="message"></p>
+    </form>
+
+    <p class="guest-link">New here? <a href="planner.html">Continue as Guest</a></p>
+  </div>
+</main>
+
+<footer class="main-footer">
+  © 2025 TripGenius | Academic Project
+</footer>
+
+<script>
+  const loginForm = document.getElementById("loginForm");
+  const message = document.getElementById("message");
+
+  loginForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if (!email.endsWith("@gmail.com")) {
+      message.textContent = "Email must end with @gmail.com";
+      message.className = "message error";
+      return;
+    }
+
+    if (password.length < 6) {
+      message.textContent = "Password must be at least 6 characters";
+      message.className = "message error";
+      return;
+    }
+
+    message.textContent = "Login successful!";
+    message.className = "message success";
+
+    setTimeout(() => {
+      window.location.href = "planner.html";
+    }, 1000);
+  });
+</script>
+
+</body>
+</html>
