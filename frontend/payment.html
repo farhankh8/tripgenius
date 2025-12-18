@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment | TripGenius</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+    body { background: #f5f7fa; min-height: 100vh; display: flex; flex-direction: column; }
+    header, .main-header { text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #0066ff, #00b4ff); color: #fff; }
+    header h1, .main-header h1 { font-size: 32px; margin-bottom: 8px; }
+    header p, .main-header p { font-size: 16px; }
+    .container { max-width: 1200px; width: 90%; margin: 30px auto; display: flex; flex-direction: column; gap: 25px; flex: 1; }
+    .card { background: #fff; padding: 35px 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    .card h2, .card h3 { margin-top: 0; color: #0077cc; }
+    .card p { color: #555; line-height: 1.6; margin-bottom: 15px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+    .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; }
+    .form-group input:focus, .form-group select:focus { outline: none; border-color: #0077cc; box-shadow: 0 0 5px rgba(0,119,204,0.3); }
+    .primary-btn { padding: 14px 25px; background: linear-gradient(90deg, #0077cc, #00b4ff); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+    .primary-btn:hover { background: linear-gradient(90deg, #005fa3, #009ddb); transform: translateY(-2px); }
+    .main-footer { text-align: center; padding: 15px; font-size: 14px; color: #666; background: #f1f1f1; margin-top: auto; }
+    .secure-badge { display: flex; align-items: center; margin-bottom: 15px; color: #28a745; font-weight: 600; }
+    .secure-badge::before { content: "🔒"; margin-right: 8px; font-size: 18px; }
+    .promo-banner { background: #f0f8ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-weight: 600; color: #0077cc; }
+    .cashback-card { background: #e6f7ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-weight: 600; color: #0077cc; }
+    .button-center { text-align: center; margin: 20px 0; }
+  </style>
+</head>
+<body>
+  <header class="main-header">
+    <h1>Payment Details</h1>
+    <p>Securely complete your payment to confirm your booking</p>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h2>Personal Details</h2>
+      <div class="form-group">
+        <label>Name on Card</label>
+        <input type="text" id="card-name" placeholder="Enter your name">
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="email" placeholder="Enter your email">
+      </div>
+      <div class="form-group">
+        <label>Mobile Number</label>
+        <input type="tel" id="mobile" placeholder="Enter your mobile number">
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Payment Information</h2>
+      <div class="secure-badge">Secure Payment</div>
+      <div class="form-group">
+        <label>Payment Method</label>
+        <select id="payment-method">
+          <option value="credit">Credit Card</option>
+          <option value="debit">Debit Card</option>
+          <option value="upi">UPI</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Card Number / UPI ID</label>
+        <input type="text" id="card-upi" placeholder="Enter card number or UPI ID">
+      </div>
+      <div class="form-group">
+        <label>CVV / UPI PIN</label>
+        <input type="password" id="cvv-pin" placeholder="Enter CVV or PIN">
+      </div>
+    </div>
+
+    <div class="card promo-banner">
+      <p>✨ Get 10% cashback on UPI payments! ✨</p>
+    </div>
+
+    <div class="card cashback-card">
+      <p>💳 Extra 5% cashback on select credit cards!</p>
+    </div>
+
+    <div class="button-center">
+      <button class="primary-btn" onclick="processPayment()">Proceed to Payment</button>
+    </div>
+
+    <div class="card">
+      <p>By proceeding, you agree to our <a href="terms.html">Terms and Conditions</a> and <a href="privacy.html">Privacy Policy</a>.</p>
+      <p>Need to cancel? <a href="cancellation.html" class="cancellation-link">Click here</a> for cancellation details.</p>
+    </div>
+  </div>
+
+  <footer class="main-footer">© 2025 TripGenius | Academic Project</footer>
+
+  <script>
+    function processPayment() {
+      const cardName = document.getElementById("card-name").value;
+      const email = document.getElementById("email").value;
+      const mobile = document.getElementById("mobile").value;
+      const paymentMethod = document.getElementById("payment-method").value;
+      const cardUpi = document.getElementById("card-upi").value;
+      const cvvPin = document.getElementById("cvv-pin").value;
+
+      if (!cardName || !email || !mobile || !cardUpi || !cvvPin) {
+        alert("Please fill all payment details.");
+        return;
+      }
+
+      window.location.href = "booking-confirmation.html";
+    }
+  </script>
+</body>
+</html>
